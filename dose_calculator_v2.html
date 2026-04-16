@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дозування — Сімейний лікар</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1a5fb4;--blue-light:#e6f1fb;--blue-mid:#378add;--green:#27500a;--green-light:#eaf3de;--amber:#633806;--amber-light:#faeeda;--red:#791f1f;--red-light:#fcebeb;--gray:#444441;--surface:#f6f5f1;--border:#e2e0d8;--text:#1a1a1a;--muted:#777}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--surface);color:var(--text);font-size:14px;line-height:1.6;padding:1rem;min-height:100vh}
+.wrap{max-width:600px;margin:0 auto}
+.header{background:#1a1a1a;color:#fff;border-radius:12px 12px 0 0;padding:1.25rem 1.5rem;margin-bottom:0}
+.header h1{font-size:17px;font-weight:600;letter-spacing:-.01em}
+.header .sub{font-size:11px;color:#aaa;margin-top:3px;font-family:'IBM Plex Mono',monospace}
+.body{background:#fff;border-radius:0 0 12px 12px;padding:1.25rem 1.5rem;border:1px solid var(--border);border-top:none;margin-bottom:1rem}
+.mode-row{display:flex;gap:3px;background:var(--surface);border-radius:8px;padding:3px;margin-bottom:1.25rem}
+.mode-btn{flex:1;padding:7px 4px;border-radius:6px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:11px;font-weight:500;font-family:'IBM Plex Sans',sans-serif;transition:.15s}
+.mode-btn.active{background:#1a1a1a;color:#fff}
+.sc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:1.25rem}
+.sc-btn{padding:8px 4px;border-radius:6px;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;font-size:11px;text-align:center;line-height:1.3;font-family:'IBM Plex Sans',sans-serif;transition:.1s}
+.sc-btn.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.lbl{font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-family:'IBM Plex Mono',monospace}
+.sl-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.sl-val{font-size:16px;font-weight:600;min-width:56px;text-align:right;font-family:'IBM Plex Mono',monospace}
+input[type=range]{flex:1;height:3px;accent-color:#1a1a1a;cursor:pointer}
+select{width:100%;margin-bottom:1rem;padding:9px 10px;border:1px solid var(--border);border-radius:7px;font-size:13px;background:#fff;font-family:'IBM Plex Sans',sans-serif;color:var(--text);-webkit-appearance:none;cursor:pointer}
+.rcard{border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:.75rem}
+.dname{font-size:16px;font-weight:600;margin-bottom:2px}
+.dcat{font-size:11px;color:var(--muted);margin-bottom:.875rem;font-family:'IBM Plex Mono',monospace}
+.rrow{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--surface);font-size:13px}
+.rrow:last-child{border-bottom:none}
+.rkey{color:var(--muted)}
+.rbig{font-size:24px;font-weight:600;color:var(--blue);font-family:'IBM Plex Mono',monospace}
+.rval{font-weight:600;font-family:'IBM Plex Mono',monospace}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.75rem}
+.met{background:var(--surface);border-radius:8px;padding:.75rem 1rem}
+.mlbl{font-size:10px;color:var(--muted);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em;font-family:'IBM Plex Mono',monospace}
+.mval{font-size:22px;font-weight:600;font-family:'IBM Plex Mono',monospace}
+.munit{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.mlcard{background:var(--surface);border-radius:10px;padding:1rem 1.25rem;margin-bottom:.75rem}
+.mlres{font-size:22px;font-weight:600;color:var(--blue);margin-top:.5rem;font-family:'IBM Plex Mono',monospace}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.75rem}
+.scard{border-radius:10px;padding:.875rem 1rem;border:1px solid transparent}
+.scard-safe{background:var(--green-light);border-color:#c0dd97}
+.scard-caution{background:var(--amber-light);border-color:#fac775}
+.scard-avoid{background:var(--red-light);border-color:#f7c1c1}
+.scard-head{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;font-family:'IBM Plex Mono',monospace}
+.scard-safe .scard-head{color:var(--green)}
+.scard-caution .scard-head{color:var(--amber)}
+.scard-avoid .scard-head{color:var(--red)}
+.scard-st{font-size:13px;font-weight:600;margin-bottom:4px}
+.scard-safe .scard-st{color:var(--green)}
+.scard-caution .scard-st{color:var(--amber)}
+.scard-avoid .scard-st{color:var(--red)}
+.scard-note{font-size:11px;line-height:1.45}
+.scard-safe .scard-note{color:#3b6d11}
+.scard-caution .scard-note{color:#854f0b}
+.scard-avoid .scard-note{color:#a32d2d}
+.sbadge{display:inline-flex;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;margin:0 4px 4px 0}
+.sb-safe{background:var(--green-light);color:var(--green)}
+.sb-caution{background:var(--amber-light);color:var(--amber)}
+.sb-avoid{background:var(--red-light);color:var(--red)}
+.nb{border-left:3px solid;padding:.65rem .9rem;margin-bottom:.75rem;font-size:12px;line-height:1.5;border-radius:0 6px 6px 0}
+.nb-ok{background:var(--green-light);border-color:#639922;color:var(--green)}
+.nb-warn{background:var(--red-light);border-color:#e24b4a;color:var(--red)}
+.nb-amb{background:var(--amber-light);border-color:#ef9f27;color:var(--amber)}
+.pcard{background:#f0f7ff;border-radius:10px;padding:1.25rem;margin-bottom:.75rem;border:1px solid #c8dff8}
+.ptitle{font-size:13px;font-weight:600;color:#0c447c;margin-bottom:.875rem;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.03em}
+.prow{display:flex;gap:10px;margin-bottom:.625rem;font-size:13px;color:#1a3a5c;line-height:1.45}
+.pico{flex-shrink:0;font-size:14px;margin-top:1px}
+.btn-row{display:flex;gap:8px;margin-bottom:.5rem}
+.cbtn,.pbtn{flex:1;padding:10px;font-size:12px;cursor:pointer;border-radius:7px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;transition:.1s}
+.cbtn{border:1px solid var(--border);background:#fff;color:var(--blue)}
+.cbtn:hover{background:var(--blue-light)}
+.pbtn{border:1px solid #c8dff8;background:#e6f1fb;color:#0c447c}
+.pbtn:hover{background:#c8dff8}
+.dr{color:#a32d2d!important}
+.hidden{display:none!important}
+.dis{font-size:10px;color:#bbb;margin-top:1rem;padding-top:.75rem;border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;line-height:1.5}
+@media(max-width:480px){.sc-grid{grid-template-columns:repeat(2,1fr)}.g2,.sg{grid-template-columns:1fr}.btn-row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="header">
+  <h1>Калькулятор дозування</h1>
+  <div class="sub">Сімейний лікар · Педіатрія · Дорослі · Вагітність / Лактація · v2.0</div>
+</div>
+<div class="body">
+
+<div class="mode-row">
+  <button class="mode-btn active" onclick="setMode('child',this)">Дитина</button>
+  <button class="mode-btn" onclick="setMode('adult',this)">Дорослий</button>
+  <button class="mode-btn" onclick="setMode('preg',this)">Вагітна / Годуюча</button>
+</div>
+
+<div class="lbl">Клінічний сценарій</div>
+<div class="sc-grid" id="scgrid"></div>
+
+<div class="lbl">Препарат</div>
+<select id="dsel" onchange="cfi=0;calc()"></select>
+
+<div id="pc">
+  <div class="lbl">Вага дитини (кг)</div>
+  <div class="sl-row"><input type="range" id="wt" min="3" max="80" value="20" step="1" oninput="calc()"><span class="sl-val"><span id="wt-out">20</span> кг</span></div>
+  <div class="lbl">Вік</div>
+  <div class="sl-row"><input type="range" id="ag" min="0" max="17" value="5" step="1" oninput="calc()"><span class="sl-val"><span id="ag-out">5</span> р.</span></div>
+</div>
+
+<div id="res"></div>
+<div class="dis">Довідковий інструмент. Рішення про призначення приймає лікар з урахуванням клінічної картини та чинних протоколів МОЗ України. Дані: настанови МОЗ, WHO, FDA label, ВООЗ.</div>
+</div>
+</div>
+
+<script>
+const SC=[
+  {id:'fever',label:'Температура / біль',drugs:['para','ibu','nimesulide','metamizole']},
+  {id:'resp',label:'Дихальні шляхи',drugs:['amox','amoxclav','azithro','cefuroxime','ceftriaxone','clarithro']},
+  {id:'laryng',label:'Ларингіт / круп',drugs:['dexa','beta','prednisone','budesonide']},
+  {id:'allergy',label:'Алергія',drugs:['cetirizine','loratadine','dexa']},
+  {id:'uti',label:'ІСШ',drugs:['nitrofurantoin','cefixime','ceftriaxone','cotrimoxazole']},
+  {id:'gi',label:'ШКТ / паразити',drugs:['metronidazole','nifuroxazide','azithro','albendazole','mebendazole']},
+];
+const D={
+  para:{name:'Парацетамол',cat:'Антипіретик / анальгетик',trade:'Панадол, Ефералган',min:10,max:15,cap:1000,type:'pd',freq:4,ftxt:'кожні 4–6 год (макс 5 разів/добу)',forms:[{l:'Сусп 120 мг/5 мл',c:24,s:false},{l:'Сусп 250 мг/5 мл',c:50,s:false},{l:'Табл 500 мг',c:500,s:true}],note:'Добова доза ≤75 мг/кг або 4000 мг. Обережно при патології печінки.',amin:0,adm:'Можна давати незалежно від їжі.',adult:{doseRange:'500–1000 мг',sd:750,maxDaily:4000,ftxt:'кожні 4–6 год (макс 5 разів/добу)',forms:[{l:'Табл 500 мг',c:500,s:true},{l:'Табл 1000 мг',c:1000,s:true}],note:'При хронічному вживанні алкоголю — не більше 2 г/добу. Гепатотоксичний при передозуванні.'},safety:{pregnancy:{level:'safe',status:'Безпечно',note:'Препарат вибору при вагітності. Безпечний у всіх триместрах у рекомендованих дозах.'},lactation:{level:'safe',status:'Сумісний з ГВ',note:'Потрапляє у молоко у незначній кількості. ВООЗ та AAP вважають сумісним.'}}},
+  ibu:{name:'Ібупрофен',cat:'НПЗЗ',trade:'Нурофен, Адвіл',min:5,max:10,cap:400,type:'pd',freq:3,ftxt:'кожні 6–8 год (макс 4 рази/добу)',forms:[{l:'Сусп 100 мг/5 мл',c:20,s:false},{l:'Сусп 200 мг/5 мл',c:40,s:false},{l:'Табл 200 мг',c:200,s:true}],note:'Не призначати до 3 місяців. Обережно при нирковій недостатності та зневодненні.',amin:0,adm:'Давати під час або після їжі.',adult:{doseRange:'400 мг',sd:400,maxDaily:1200,ftxt:'кожні 6–8 год (макс 4 рази/добу, з їжею)',forms:[{l:'Табл 400 мг',c:400,s:true},{l:'Табл 200 мг',c:200,s:true}],note:'ОТС максимум 1200 мг/добу. За призначенням — до 2400 мг. Приймати з їжею або молоком.'},safety:{pregnancy:{level:'caution',status:'Уникати після 20 тижнів',note:'1–2 триместр: допустимо коротко. Після 20 тижнів — ризик закриття артеріальної протоки, маловоддя. FDA 2020: уникати.'},lactation:{level:'caution',status:'Обережно',note:'Потрапляє у молоко мінімально. Допустимо короткочасно. Уникати у немовлят до 1 міс.'}}},
+  nimesulide:{name:'Німесулід',cat:'НПЗЗ',trade:'Найз, Німесил',min:1.5,max:2.5,cap:100,type:'pd',freq:2,ftxt:'2 рази на добу (після їжі)',forms:[{l:'Сусп 50 мг/5 мл',c:10,s:false},{l:'Гранули 100 мг/пакет',c:100,s:true}],note:'Тільки від 12 років. Курс ≤15 днів. Гепатотоксичний.',amin:12,adm:'Після їжі.',adult:{doseRange:'100 мг',sd:100,maxDaily:200,ftxt:'2 рази на добу (після їжі), курс ≤15 днів',forms:[{l:'Гранули 100 мг/пакет',c:100,s:true},{l:'Табл 100 мг',c:100,s:true}],note:'Не застосовувати при захворюваннях печінки. Курс строго ≤15 днів.'},safety:{pregnancy:{level:'avoid',status:'Протипоказано',note:'Протипоказано у всіх триместрах. Ризик передчасного закриття артеріальної протоки та нефротоксичності плода.'},lactation:{level:'avoid',status:'Протипоказано',note:'Протипоказано при ГВ. Дані відсутні, потенційна токсичність.'}}},
+  metamizole:{name:'Метамізол (анальгін)',cat:'Анальгетик',trade:'Анальгін',min:5,max:10,cap:500,type:'pd',freq:3,ftxt:'в/м при невідкладних станах',forms:[{l:'Р-н 500 мг/мл',c:500,s:false}],note:'ВООЗ не рекомендує рутинно. Тільки при невідкладних станах. Ризик агранулоцитозу.',amin:3,adm:'Тільки в/м за призначенням лікаря.',adult:{doseRange:'500–1000 мг',sd:500,maxDaily:4000,ftxt:'кожні 6–8 год в/м або per os',forms:[{l:'Р-н 500 мг/мл',c:500,s:false},{l:'Табл 500 мг',c:500,s:true}],note:'ВООЗ не рекомендує рутинно. В/м вводити повільно. Ризик агранулоцитозу, анафілаксії.'},safety:{pregnancy:{level:'caution',status:'Обережно',note:'Уникати в 1-му триместрі та наприкінці вагітності. Ризик передчасного закриття артеріальної протоки.'},lactation:{level:'caution',status:'Обережно',note:'Активні метаболіти у молоці. Рекомендується пауза ГВ на 48 год після прийому.'}}},
+  amox:{name:'Амоксицилін',cat:'Антибіотик (пеніцилін)',trade:'Флемоксин, Оспамокс',min:40,max:90,cap:3000,type:'dd',freq:3,ftxt:'3 рази на добу',forms:[{l:'Сусп 125 мг/5 мл',c:25,s:false},{l:'Сусп 250 мг/5 мл',c:50,s:false},{l:'Сусп 500 мг/5 мл',c:100,s:false}],note:'При ГСО/пневмонії — 80–90 мг/кг/добу. ІВРШ — 40–50 мг/кг/добу.',amin:0,adm:'Незалежно від їжі. Курс завершити повністю.',adult:{doseRange:'500–1000 мг',sd:750,maxDaily:3000,ftxt:'3 рази на добу',forms:[{l:'Табл/капс 500 мг',c:500,s:true},{l:'Табл 1000 мг',c:1000,s:true}],note:'При тяжкій пневмонії — 1000 мг × 3/добу. Курс 5–10 днів.'},safety:{pregnancy:{level:'safe',status:'Безпечно',note:'Категорія B. Широко застосовується при вагітності. Безпечний у всіх триместрах.'},lactation:{level:'safe',status:'Сумісний з ГВ',note:'Потрапляє у молоко у незначній кількості. У немовляти можлива діарея або сенсибілізація.'}}},
+  amoxclav:{name:'Амоксицилін/клавуланат',cat:'Антибіотик (захищений пеніцилін)',trade:'Аугментин, Флемоклав',min:40,max:90,cap:3000,type:'dd',freq:2,ftxt:'2 рази на добу (з їжею)',forms:[{l:'Сусп 400/57 мг/5 мл',c:80,s:false},{l:'Сусп 250/62.5 мг/5 мл',c:50,s:false}],note:'Доза за амоксициліном. При ГСО/синуситі — 90 мг/кг/добу. Обов\'язково з їжею.',amin:0,adm:'Обов\'язково під час їжі — краще переноситься.',adult:{doseRange:'875/125 мг',sd:875,maxDaily:1750,ftxt:'2 рази на добу (з їжею)',forms:[{l:'Табл 875/125 мг',c:875,s:true},{l:'Табл 500/125 мг',c:500,s:true}],note:'Обов\'язково з їжею — знижує ризик діареї. Курс 5–10 днів.'},safety:{pregnancy:{level:'safe',status:'Безпечно',note:'Категорія B. Рутинно використовується при вагітності. Безпечний у всіх триместрах.'},lactation:{level:'safe',status:'Сумісний з ГВ',note:'У немовляти можлива діарея. Загалом вважається сумісним.'}}},
+  azithro:{name:'Азитроміцин',cat:'Антибіотик (макролід)',trade:'Сумамед, Азитроміцин',min:10,max:10,cap:500,type:'dd',freq:1,ftxt:'1 раз на добу, 3–5 днів',forms:[{l:'Сусп 100 мг/5 мл',c:20,s:false},{l:'Сусп 200 мг/5 мл',c:40,s:false}],note:'Атипова пневмонія / кашлюк — 5 днів. Приймати до їжі або через 2 год після.',amin:0.5,adm:'За 1 год до або через 2 год після їжі.',adult:{doseRange:'500 мг',sd:500,maxDaily:500,ftxt:'1 раз на добу (до їжі), 3–5 днів',forms:[{l:'Табл/капс 500 мг',c:500,s:true},{l:'Табл 250 мг',c:250,s:true}],note:'Атипова пневмонія — 5 днів. Ангіна — 3 дні. До їжі або через 2 год після.'},safety:{pregnancy:{level:'caution',status:'Обережно',note:'Категорія B. Обмежені дані. При чітких показаннях — допустимо. Перевагу надавати амоксициліну.'},lactation:{level:'caution',status:'Обережно',note:'Виявляється у грудному молоці. Використовувати при чітких показаннях.'}}},
+  cefuroxime:{name:'Цефуроксим аксетил',cat:'Антибіотик (цефалоспорин II)',trade:'Зіннат, Аксетин',min:20,max:30,cap:1000,type:'dd',freq:2,ftxt:'2 рази на добу (з їжею)',forms:[{l:'Сусп 125 мг/5 мл',c:25,s:false},{l:'Табл 250 мг',c:250,s:true}],note:'З їжею — краща біодоступність. Таблетки всмоктуються краще ніж суспензія.',amin:0.25,adm:'Обов\'язково під час їжі.',adult:{doseRange:'250–500 мг',sd:375,maxDaily:1000,ftxt:'2 рази на добу (з їжею)',forms:[{l:'Табл 250 мг',c:250,s:true},{l:'Табл 500 мг',c:500,s:true}],note:'При пневмонії — 500 мг 2 рази/добу. З їжею. Курс 7–10 днів.'},safety:{pregnancy:{level:'safe',status:'Безпечно',note:'Категорія B. Безпечний у всіх триместрах. Широко застосовується при вагітності.'},lactation:{level:'safe',status:'Сумісний з ГВ',note:'Мінімальна концентрація у грудному молоці. Вважається сумісним.'}}},
+  ceftriaxone:{name:'Цефтриаксон',cat:'Антибіотик (цефалоспорин III) в/м або в/в',trade:'Роцефін, Лораксон',min:50,max:100,cap:4000,type:'dd',freq:1,ftxt:'1 раз на добу в/м або в/в',forms:[{l:'Фл 1000 мг + 3.5 мл лідокаїну 1%',c:285.7,s:false}],note:'В/м — розчиняти в лідокаїні 1%. Не змішувати з кальцієм. При менінгіті — 100 мг/кг/добу.',amin:0,adm:'Тільки в/м або в/в. Вводить медичний персонал.',adult:{doseRange:'1–2 г',sd:1000,maxDaily:4000,ftxt:'1 раз на добу в/м або в/в',forms:[{l:'Фл 1000 мг',c:285.7,s:false},{l:'Фл 2000 мг',c:571.4,s:false}],note:'При важких інфекціях — 2 г/добу. В/м у лідокаїні 1%. Не змішувати з кальцієм.'},safety:{pregnancy:{level:'safe',status:'Безпечно',note:'Категорія B. Безпечний у всіх триместрах при чітких показаннях.'},lactation:{level:'safe',status:'Сумісний з ГВ',note:'Потрапляє у молоко у незначній кількості. Вважається сумісним.'}}},
+  clarithro:{name:'Кларитроміцин',cat:'Антибіотик (макролід)',trade:'Клацид, Фромілід',min:15,max:15,cap:500,type:'dd',freq:2,ftxt:'2 рази на добу',forms:[{l:'Сусп 125 мг/5 мл',c:25,s:false},{l:'Сусп 250 мг/5 мл',c:50,s:false}],note:'Альтернатива азитроміцину. Безпечніший при захворюваннях ШКТ. Ерадикація H.pylori.',amin:0.5,adm:'Незалежно від їжі.',adult:{doseRange:'500 мг',sd:500,maxDaily:1000,ftxt:'2 рази на добу',forms:[{l:'Табл 500 мг',c:500,s:true},{l:'Табл 250 мг',c:250,s:true}],note:'H.pylori — комбінована схема. Численні взаємодії (CYP3A4). Курс 7–14 днів.'},safety:{pregnancy:{level:'avoid',status:'Уникати',note:'Тератогенний у тварин. Уникати особливо в 1-му триместрі. Альтернатива — амоксицилін або цефалоспорини.'},lactation:{level:'caution',status:'Обережно',note:'Потрапляє у грудне молоко. Обмежені дані. Використовувати лише при відсутності безпечніших альтернатив.'}}},
+  dexa:{name:'Дексаметазон',cat:'Глюкокортикоїд',trade:'Дексаметазон, Дексон',min:0.15,max:0.6,cap:16,type:'pd',freq:1,ftxt:'Одноразово per os або в/м',forms:[{l:'Р-н 4 мг/мл для ін\'єкцій',c:4,s:false}],note:'Ефект повільний. Спостерігати 1–2 год після введення. При алергії — 0.15–0.3 мг/кг.',amin:0,adm:'Тільки за призначенням лікаря.',adult:{doseRange:'4–10 мг',sd:4,maxDaily:40,ftxt:'Залежить від показання (одноразово або курс)',forms:[{l:'Р-н 4 мг/мл',c:4,s:false},{l:'Табл 0.5 мг',c:0.5,s:true}],note:'Алергія/набряк Квінке: 4–8 мг в/м. Ларингіт: 8–10 мг в/м. Дозу підбирати за показанням.'},safety:{pregnancy:{level:'caution',status:'Обережно / за показаннями',note:'Системні ГКС категорія C. Для прискорення дозрівання легень плода 24–34 тижні — цілеспрямоване застосування. Тривале — ризик затримки росту плода.'},lactation:{level:'caution',status:'Обережно',note:'При коротких курсах ризик для немовляти мінімальний. При дозі >40 мг/добу — пауза ГВ на 4 год після прийому.'}}},
+  beta:{name:'Бетаметазон',cat:'Глюкокортикоїд',trade:'Целестон, Бетаспан',min:0.25,max:0.4,cap:7,type:'pd',freq:1,ftxt:'Одноразово per os',forms:[{l:'Табл 0.5 мг',c:0.5,s:true}],note:'Смакує краще за дексаметазон. Таблетку розчинити у воді або соку.',amin:0,adm:'Розчинити таблетку у воді або соку.',adult:{doseRange:'0.5–5 мг',sd:2,maxDaily:10,ftxt:'Залежить від показання',forms:[{l:'Табл 0.5 мг',c:0.5,s:true},{l:'Р-н 4 мг/мл',c:4,s:false}],note:'Дозрівання легень плода: 12 мг в/м × 2 (окрема схема). Для ларингіту дорослих — переважно дексаметазон.'},safety:{pregnancy:{level:'caution',status:'Обережно / за показаннями',note:'Цілеспрямоване застосування 24–34 тижні для дозрівання легень плода (12 мг в/м × 2 з інтервалом 24 год). Системне — ті ж ризики що й дексаметазон.'},lactation:{level:'caution',status:'Обережно',note:'При коротких курсах ризик для немовляти мінімальний.'}}},
+  prednisone:{name:'Преднізолон',cat:'Глюкокортикоїд',trade:'Преднізолон',min:1,max:2,cap:60,type:'pd',freq:1,ftxt:'Одноразово per os або в/м',forms:[{l:'Табл 5 мг',c:5,s:true},{l:'Р-н 30 мг/мл',c:30,s:false}],note:'При ларингіті менш ефективний за дексаметазон. Дитина може виблювати таблетку.',amin:0,adm:'Прийом незалежно від їжі.',adult:{doseRange:'20–60 мг',sd:40,maxDaily:60,ftxt:'1 раз вранці',forms:[{l:'Табл 5 мг',c:5,s:true},{l:'Табл 20 мг',c:20,s:true}],note:'Відміна поступово якщо курс >5–7 днів. Вранці — відповідно до добового ритму кортизолу.'},safety:{pregnancy:{level:'caution',status:'Обережно',note:'Допустимо при чітких показаннях. Короткі курси безпечніші. Суперечливі дані щодо ризику в 1-му триместрі.'},lactation:{level:'safe',status:'Сумісний при ≤20 мг/добу',note:'При дозі ≤20 мг/добу — вважається сумісним. При >40 мг — пауза ГВ на 4 год після прийому.'}}},
+  budesonide:{name:'Будесонід інгаляційний',cat:'ГКС інгаляційний',trade:'Пульмікорт',min:2,max:2,cap:2,type:'pd',freq:1,ftxt:'Одноразово через небулайзер',forms:[{l:'Сусп 0.25 мг/мл (2 мл)',c:0.25,s:false},{l:'Сусп 0.5 мг/мл (2 мл)',c:0.5,s:false}],note:'Доза фіксована — 2 мг незалежно від ваги. Розбавити 0.9% NaCl до 4 мл.',amin:0,adm:'Через небулайзер. Полоскати рот після інгаляції.',adult:{doseRange:'200–400 мкг',sd:0.2,maxDaily:1.6,ftxt:'2 рази на добу інгаляційно',forms:[{l:'Інгалятор 200 мкг/доза',c:0.2,s:false},{l:'Інгалятор 100 мкг/доза',c:0.1,s:false}],note:'Підтримуюча терапія БА. Полоскати рот після інгаляції.'},safety:{pregnancy:{level:'safe',status:'Безпечно (інгаляційно)',note:'Категорія B. Інгаляційні ГКС при БА рекомендовані при вагітності. Системна абсорбція мінімальна.'},lactation:{level:'safe',status:'Сумісний з ГВ',note:'Інгаляційний будесонід — мінімальна системна абсорбція. Безпечний при ГВ.'}}},
+  cetirizine:{name:'Цетиризин',cat:'Антигістамінний II покоління',trade:'Зіртек, Цетрин',min:0.25,max:0.25,cap:10,type:'dd',freq:1,ftxt:'1 раз на добу (ввечері)',forms:[{l:'Краплі 10 мг/мл',c:10,s:false},{l:'Сироп 5 мг/5 мл',c:1,s:false}],note:'Від 6 р.: фіксована доза 5–10 мг/добу незалежно від ваги. До 6 р.: 0.25 мг/кг/добу.',amin:0.5,adm:'Давати ввечері перед сном.',adult:{doseRange:'10 мг',sd:10,maxDaily:10,ftxt:'1 раз на добу (ввечері)',forms:[{l:'Табл 10 мг',c:10,s:true},{l:'Краплі 10 мг/мл',c:10,s:false}],note:'При нирковій недостатності — зменшити дозу. Мінімальна седація.'},safety:{pregnancy:{level:'safe',status:'Безпечно',note:'Категорія B. Когортні дослідження не виявили ризику. Прийнятний вибір при алергії у вагітних.'},lactation:{level:'caution',status:'Обережно',note:'Виявляється у грудному молоці. Можлива сонливість у немовляти. Лоратадин — кращий вибір при ГВ.'}}},
+  loratadine:{name:'Лоратадин',cat:'Антигістамінний II покоління',trade:'Кларитин, Еролін',min:0.2,max:0.2,cap:10,type:'dd',freq:1,ftxt:'1 раз на добу',forms:[{l:'Сироп 1 мг/мл',c:1,s:false},{l:'Табл 10 мг',c:10,s:true}],note:'<30 кг — 5 мг/добу, ≥30 кг — 10 мг/добу. Не викликає сонливості.',amin:2,adm:'Можна давати у будь-який час доби.',adult:{doseRange:'10 мг',sd:10,maxDaily:10,ftxt:'1 раз на добу',forms:[{l:'Табл 10 мг',c:10,s:true},{l:'Сироп 1 мг/мл',c:1,s:false}],note:'Не викликає сонливості. Прийом незалежно від їжі.'},safety:{pregnancy:{level:'safe',status:'Безпечно',note:'Категорія B. Антигістамінний вибору при вагітності. Широка доказова база безпеки.'},lactation:{level:'safe',status:'Сумісний з ГВ',note:'Мінімальна екскреція у молоко. AAP та ВООЗ вважають сумісним.'}}},
+  nitrofurantoin:{name:'Нітрофурантоїн',cat:'Антибіотик — нижні ІСШ',trade:'Фурамаг, Макрод',min:5,max:7,cap:300,type:'dd',freq:4,ftxt:'4 рази на добу (з їжею)',forms:[{l:'Табл 50 мг',c:50,s:true}],note:'Тільки нижні ІСШ. Пієлонефрит — НЕ ефективний. Приймати з їжею.',amin:1,adm:'Обов\'язково під час їжі.',adult:{doseRange:'100 мг',sd:100,maxDaily:200,ftxt:'2 рази на добу (MR-форма, з їжею), 5 днів',forms:[{l:'Капс 100 мг MR',c:100,s:true},{l:'Табл 50 мг',c:50,s:true}],note:'Тільки нижні ІСШ. Неефективний при СКФ <45. MR-форма — 2 рази/добу.'},safety:{pregnancy:{level:'caution',status:'Обережно',note:'1–2 триместр: допустимо. Уникати ≥38 тижнів — ризик гемолітичної анемії новонародженого.'},lactation:{level:'caution',status:'Обережно',note:'Уникати при дефіциті Г6ФД у немовляти. В інших випадках — прийнятно.'}}},
+  cefixime:{name:'Цефіксим',cat:'Антибіотик (цефалоспорин III) — ІСШ',trade:'Супракс, Цефікс',min:8,max:8,cap:400,type:'dd',freq:1,ftxt:'1–2 рази на добу',forms:[{l:'Сусп 100 мг/5 мл',c:20,s:false}],note:'Ефективний при пієлонефриті. Хороша альтернатива парентеральній терапії.',amin:0.5,adm:'Незалежно від їжі.',adult:{doseRange:'400 мг',sd:400,maxDaily:400,ftxt:'1 раз на добу або 200 мг 2 рази/добу',forms:[{l:'Табл/капс 400 мг',c:400,s:true},{l:'Табл 200 мг',c:200,s:true}],note:'Неускладнений пієлонефрит. Гонорея: 400 мг одноразово. Курс 7–14 днів.'},safety:{pregnancy:{level:'safe',status:'Безпечно',note:'Категорія B. Широко застосовується при ІСШ у вагітних. Безпечний у всіх триместрах.'},lactation:{level:'safe',status:'Сумісний з ГВ',note:'Цефалоспорини вважаються сумісними з ГВ.'}}},
+  cotrimoxazole:{name:'Котримоксазол (TMP/SMX)',cat:'Антибіотик — ІСШ',trade:'Бісептол',min:6,max:12,cap:320,type:'dd',freq:2,ftxt:'2 рази на добу (доза за TMP)',forms:[{l:'Сусп 40/200 мг/5 мл (ТМП 8мг/мл)',c:8,s:false},{l:'Табл 80/400 мг (ТМП 80мг)',c:80,s:true}],note:'Доза за триметопримом 6–12 мг/кг/добу. Перевіряти чутливість.',amin:2,adm:'З їжею або водою.',adult:{doseRange:'960 мг (TMP 160 / SMX 800)',sd:160,maxDaily:320,ftxt:'2 рази на добу',forms:[{l:'Табл 960 мг (ТМП 160 мг)',c:160,s:true},{l:'Табл 480 мг (ТМП 80 мг)',c:80,s:true}],note:'Нижні ІСШ — 3 дні. Пієлонефрит — 14 днів. Перевіряти чутливість — резистентність висока.'},safety:{pregnancy:{level:'avoid',status:'Уникати',note:'Уникати в 1-му триместрі (антагоніст фолатів). Уникати наприкінці вагітності (ризик жовтяниці новонародженого). 2-й триместр — лише при відсутності альтернатив.'},lactation:{level:'caution',status:'Обережно',note:'Уникати при недоношених, новонароджених та при дефіциті Г6ФД у немовляти.'}}},
+  metronidazole:{name:'Метронідазол',cat:'Антибіотик / антипротозойний',trade:'Метронідазол, Трихопол',min:20,max:40,cap:2000,type:'dd',freq:3,ftxt:'3 рази на добу',forms:[{l:'Сусп 200 мг/5 мл',c:40,s:false},{l:'Табл 250 мг',c:250,s:true}],note:'Лямбліоз — 15 мг/кг/добу 5–7 днів. Не вживати алкоголь.',amin:0,adm:'Після їжі. Не вживати алкоголь.',adult:{doseRange:'400–500 мг',sd:500,maxDaily:1500,ftxt:'3 рази на добу',forms:[{l:'Табл 500 мг',c:500,s:true},{l:'Табл 250 мг',c:250,s:true}],note:'БВ/трихомоніаз: 500 мг × 2 на добу 7 днів або 2 г одноразово. Не вживати алкоголь.'},safety:{pregnancy:{level:'caution',status:'Уникати в 1-му триместрі',note:'Уникати в 1-му триместрі. 2–3 триместр: допустимо при БВ/трихомоніазі.'},lactation:{level:'caution',status:'Обережно',note:'Гірко на смак у молоці. Після разової дози 2 г — пауза ГВ на 12–24 год.'}}},
+  nifuroxazide:{name:'Ніфуроксазид',cat:'Кишковий антисептик',trade:'Ентерофурил, Стопдіар',min:15,max:20,cap:800,type:'dd',freq:4,ftxt:'4 рази на добу',forms:[{l:'Сусп 220 мг/5 мл',c:44,s:false}],note:'Тільки кишкові інфекції. Системно не всмоктується. Від 1 місяця.',amin:0.08,adm:'Незалежно від їжі.',adult:{doseRange:'200 мг',sd:200,maxDaily:800,ftxt:'4 рази на добу (кожні 6 год)',forms:[{l:'Капс 200 мг',c:200,s:true},{l:'Сусп 220 мг/5 мл',c:44,s:false}],note:'Тільки бактеріальні кишкові інфекції. Курс 3–7 днів.'},safety:{pregnancy:{level:'caution',status:'Обережно',note:'Системна абсорбція мінімальна. Клінічних досліджень у вагітних мало.'},lactation:{level:'caution',status:'Обережно',note:'Системна абсорбція мінімальна — теоретично безпечний. Достатніх даних немає.'}}},
+  albendazole:{name:'Альбендазол',cat:'Антигельмінтний',trade:'Немозол, Зентел',min:15,max:15,cap:400,type:'dd',freq:1,ftxt:'Одноразово або 3–5 днів',forms:[{l:'Табл 400 мг',c:400,s:true},{l:'Сусп 200 мг/5 мл',c:40,s:false}],note:'Ентеробіоз: 400 мг одноразово незалежно від ваги (від 2 р.).',amin:2,adm:'Під час або після їжі.',adult:{doseRange:'400 мг',sd:400,maxDaily:800,ftxt:'Одноразово (ентеробіоз/аскаридоз)',forms:[{l:'Табл 400 мг',c:400,s:true}],note:'Ентеробіоз: 400 мг одноразово, повторити через 2 тижні. Лямбліоз: 400 мг/добу 5 днів.'},safety:{pregnancy:{level:'avoid',status:'Протипоказано',note:'Тератогенний у тварин. Протипоказаний в 1-му триместрі. Ентеробіоз не загрожує здоров\'ю — може почекати до пологів.'},lactation:{level:'caution',status:'Обережно',note:'Одноразовий прийом вважається прийнятним. Обмежені дані.'}}},
+  mebendazole:{name:'Мебендазол',cat:'Антигельмінтний',trade:'Вермокс',min:100,max:100,cap:200,type:'pd',freq:2,ftxt:'2 рази на добу 3 дні або одноразово',forms:[{l:'Табл 100 мг (жувальна)',c:100,s:true}],note:'Ентеробіоз: 100 мг одноразово незалежно від ваги. Жувальна таблетка.',amin:2,adm:'Жувати або розчинити у воді.',adult:{doseRange:'100–500 мг',sd:100,maxDaily:500,ftxt:'Залежить від показання',forms:[{l:'Табл 100 мг (жувальна)',c:100,s:true},{l:'Табл 500 мг',c:500,s:true}],note:'Ентеробіоз: 100 мг одноразово, повторити через 2 тижні. Аскаридоз: 100 мг 2 рази/добу 3 дні.'},safety:{pregnancy:{level:'avoid',status:'Уникати в 1-му триместрі',note:'Тератогенний у тварин. Уникати в 1-му триместрі. Після 1-го триместру — лише при чітких показаннях.'},lactation:{level:'caution',status:'Обережно',note:'Погано всмоктується системно. Одноразовий прийом прийнятний.'}}}
+};
+
+let mode='child',cs='fever',cfi=0;
+function fmt(v){return v%1===0?v.toFixed(0):v.toFixed(1);}
+
+function setMode(m,btn){
+  mode=m;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('pc').classList.toggle('hidden',m!=='child');
+  fillD();
+}
+
+function initSC(){
+  const g=document.getElementById('scgrid');
+  SC.forEach(s=>{
+    const b=document.createElement('button');
+    b.className='sc-btn'+(s.id===cs?' active':'');
+    b.textContent=s.label;
+    b.onclick=function(){
+      cs=s.id;cfi=0;
+      document.querySelectorAll('.sc-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      fillD();
+    };
+    g.appendChild(b);
+  });
+}
+
+function fillD(){
+  const sel=document.getElementById('dsel');
+  const sc=SC.find(s=>s.id===cs);
+  sel.innerHTML='';
+  sc.drugs.forEach(dk=>{
+    if(!D[dk])return;
+    const o=document.createElement('option');
+    o.value=dk;o.textContent=D[dk].name;
+    sel.appendChild(o);
+  });
+  cfi=0;calc();
+}
+
+function sfBadges(d){
+  if(!d.safety)return '';
+  const {pregnancy:p,lactation:l}=d.safety;
+  return `<div style="margin-bottom:.75rem"><span class="sbadge sb-${p.level}">Вагітність: ${p.status}</span><span class="sbadge sb-${l.level}">ГВ: ${l.status}</span></div>`;
+}
+
+function sfCards(d){
+  if(!d.safety)return '';
+  const {pregnancy:p,lactation:l}=d.safety;
+  return `<div class="sg">
+    <div class="scard scard-${p.level}"><div class="scard-head">Вагітність</div><div class="scard-st">${p.status}</div><div class="scard-note">${p.note}</div></div>
+    <div class="scard scard-${l.level}"><div class="scard-head">Лактація</div><div class="scard-st">${l.status}</div><div class="scard-note">${l.note}</div></div>
+  </div>`;
+}
+
+function calc(){
+  const dk=document.getElementById('dsel').value;
+  if(!dk||!D[dk])return;
+  const d=D[dk];
+  if(mode==='child')calcChild(d,dk);
+  else calcAdult(d,dk,mode==='preg');
+}
+
+function calcChild(d,dk){
+  const w=parseFloat(document.getElementById('wt').value);
+  const age=parseFloat(document.getElementById('ag').value);
+  document.getElementById('wt-out').textContent=w;
+  document.getElementById('ag-out').textContent=age;
+  const rMin=d.min*w,rMax=d.max*w;
+  const cMin=Math.min(rMin,d.cap),cMax=Math.min(rMax,d.cap);
+  const capped=rMax>d.cap;
+  let pdMin,pdMax,ddMin,ddMax;
+  if(d.type==='dd'){ddMin=cMin;ddMax=cMax;pdMin=cMin/d.freq;pdMax=cMax/d.freq;}
+  else{pdMin=cMin;pdMax=cMax;ddMin=pdMin*d.freq;ddMax=pdMax*d.freq;}
+  const pdDisp=fmt(pdMin)===fmt(pdMax)?fmt(pdMin):fmt(pdMin)+'–'+fmt(pdMax);
+  const ddDisp=fmt(ddMin)===fmt(ddMax)?fmt(ddMin):fmt(ddMin)+'–'+fmt(ddMax);
+  const aw=age<d.amin;
+  const fi=Math.min(cfi,d.forms.length-1);
+  const fopts=d.forms.map((f,i)=>`<option value="${i}"${i===fi?' selected':''}>${f.l}</option>`).join('');
+  const fm=d.forms[fi];
+  const avgDose=(pdMin+pdMax)/2;
+  let mlTxt=fm?(fm.s?fmt(avgDose/fm.c)+' табл.'+(avgDose/fm.c<0.85?' (подрібнити)':''):fmt(avgDose/fm.c)+' мл'):'';
+  document.getElementById('res').innerHTML=`
+<div class="rcard">
+  <div class="dname">${d.name}</div><div class="dcat">${d.cat}</div>
+  <div class="rrow"><span class="rkey">Доза на 1 прийом</span><span class="rbig">${pdDisp} мг</span></div>
+  <div class="rrow"><span class="rkey">Добова доза</span><span class="rval">${ddDisp} мг/добу</span></div>
+  <div class="rrow"><span class="rkey">Кратність</span><span class="rval">${d.ftxt}</span></div>
+  <div class="rrow"><span class="rkey">Максимум разово</span><span class="rval">${d.cap} мг</span></div>
+  ${capped?`<div class="rrow"><span class="rkey dr">Увага: розрахунок >макс.</span><span class="dr" style="font-size:12px">Не більше ${d.cap} мг за раз</span></div>`:''}
+</div>
+<div class="g2">
+  <div class="met"><div class="mlbl">Мін. / прийом</div><div class="mval">${fmt(pdMin)}</div><div class="munit">мг</div></div>
+  <div class="met"><div class="mlbl">Макс. / прийом</div><div class="mval">${fmt(pdMax)}</div><div class="munit">мг</div></div>
+</div>
+<div class="mlcard">
+  <div class="lbl">Форма → мл / табл.</div>
+  <select style="width:100%;margin-top:5px;margin-bottom:0" id="fsel" onchange="cfi=parseInt(this.value);calc()">${fopts}</select>
+  <div class="mlres">${mlTxt}</div>
+</div>
+${aw?`<div class="nb nb-warn">Вік ${age} р. — препарат рекомендований від ${d.amin<1?Math.round(d.amin*12)+' міс.':d.amin+' р.'}. Перевірте показання.</div>`:''}
+${dk==='metamizole'?`<div class="nb nb-amb">ВООЗ не рекомендує рутинно. Тільки при невідкладних станах.</div>`:''}
+${sfBadges(d)}
+<div class="nb nb-ok">${d.note}</div>
+<div class="btn-row">
+  <button class="pbtn" onclick="toggleParent('${pdDisp}мг','${mlTxt.replace(/'/g,"\\'")}','${dk}')">Показати батькам</button>
+  <button class="cbtn" onclick="copyRx('${d.name}','${w}кг, вік ${age}р.','${pdDisp}мг','${mlTxt.replace(/'/g,"\\'")}','${ddDisp}мг/добу','${d.ftxt}','${d.note.replace(/'/g,"\\'")}',this)">Скопіювати</button>
+</div>
+<div id="pview"></div>`;
+}
+
+function calcAdult(d,dk,showFull){
+  const a=d.adult;
+  if(!a){document.getElementById('res').innerHTML=`<div class="nb nb-amb">Дорослі дози — уточніть в актуальній інструкції препарату.</div>`;return;}
+  const fi=Math.min(cfi,a.forms.length-1);
+  const fopts=a.forms.map((f,i)=>`<option value="${i}"${i===fi?' selected':''}>${f.l}</option>`).join('');
+  const fm=a.forms[fi];
+  const mlTxt=fm?(fm.s?fmt(a.sd/fm.c)+' табл.':fmt(a.sd/fm.c)+' мл'):'';
+  const sfHtml=showFull?sfCards(d):sfBadges(d);
+  document.getElementById('res').innerHTML=`
+${showFull?`<div class="nb nb-amb">Інформація для безпечного застосування при вагітності та ГВ. Рішення приймає лікар.</div>`:''}
+<div class="rcard">
+  <div class="dname">${d.name}</div><div class="dcat">${d.cat}</div>
+  <div class="rrow"><span class="rkey">Доза</span><span class="rbig">${a.doseRange}</span></div>
+  <div class="rrow"><span class="rkey">Кратність</span><span class="rval">${a.ftxt}</span></div>
+  <div class="rrow"><span class="rkey">Макс. на добу</span><span class="rval">${a.maxDaily} мг</span></div>
+</div>
+<div class="mlcard">
+  <div class="lbl">Форма → мл / табл.</div>
+  <select style="width:100%;margin-top:5px;margin-bottom:0" id="fsel" onchange="cfi=parseInt(this.value);calc()">${fopts}</select>
+  <div class="mlres">${mlTxt}</div>
+</div>
+${sfHtml}
+<div class="nb nb-ok">${a.note}</div>
+<div class="btn-row">
+  <button class="cbtn" style="flex:none;width:100%" onclick="copyRx('${d.name}','Дорослий','${a.doseRange}','${mlTxt.replace(/'/g,"\\'")}','${a.maxDaily}мг/добу','${a.ftxt}','${a.note.replace(/'/g,"\\'")}',this)">Скопіювати призначення</button>
+</div>`;
+}
+
+function toggleParent(doseStr,mlStr,dk){
+  const pv=document.getElementById('pview');
+  if(pv.innerHTML){pv.innerHTML='';return;}
+  const d=D[dk];
+  const admNotes={para:'Можна давати незалежно від їжі.',ibu:'Давати під час або після їжі.',amox:'Незалежно від їжі. Курс завершити повністю.',amoxclav:'Обов\'язково під час їжі — краще переноситься.',azithro:'За 1 год до або через 2 год після їжі.',cefuroxime:'Під час їжі.',dexa:'Дати один раз за призначенням лікаря.',beta:'Розчинити таблетку у воді або соку.',cetirizine:'Ввечері перед сном.',loratadine:'У будь-який час доби.',metronidazole:'Після їжі. Не вживати алкоголь.',nitrofurantoin:'Обов\'язково під час їжі.'};
+  const adm=admNotes[dk]||'Дотримуватися призначення лікаря.';
+  pv.innerHTML=`<div class="pcard">
+    <div class="ptitle">Для батьків</div>
+    <div class="prow"><span class="pico">💊</span><span><b>${d.name}</b>${d.trade?' ('+d.trade+')':''}</span></div>
+    <div class="prow"><span class="pico">📏</span><span>Доза: <b>${doseStr}</b>${mlStr?' — це '+mlStr:''}</span></div>
+    <div class="prow"><span class="pico">🕐</span><span>${d.ftxt}</span></div>
+    <div class="prow"><span class="pico">🍽️</span><span>${adm}</span></div>
+    <div class="prow"><span class="pico">⚠️</span><span>Зверніться до лікаря якщо стан погіршується або немає покращення через 48–72 год.</span></div>
+  </div>`;
+}
+
+function copyRx(name,patient,dose,ml,daily,freq,note,btn){
+  const txt=`ПРИЗНАЧЕННЯ\n${'─'.repeat(26)}\n${name}\nПацієнт: ${patient}\n\nДоза: ${dose}${ml?' (~'+ml+')':''}\nДобово: ${daily}\nКратність: ${freq}\n${'─'.repeat(26)}\n${note}`;
+  navigator.clipboard.writeText(txt).then(()=>{btn.textContent='✓ Скопійовано!';setTimeout(()=>{btn.textContent='Скопіювати';},2000);}).catch(()=>{btn.textContent='Помилка';setTimeout(()=>{btn.textContent='Скопіювати';},2000);});
+}
+
+initSC();fillD();
+</script>
+</body>
+</html>
